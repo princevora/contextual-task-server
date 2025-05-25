@@ -16,10 +16,14 @@ const storagePath = path.join(__dirname, "./storage/todo.json");
  * @param {string} task - The description of the task to be added.
  */
 export function addTask(task) {
-    const tasks = getTasks(); // Read existing tasks
+    let tasks = getTasks();
+
+    if(tasks == "") tasks = [];
+    else tasks = JSON.parse(tasks); // Read existing tasks
+    
     const id = uuid(); // Generate a unique ID
     const status = 0; // Default status (e.g., incomplete)
-
+    
     const newTask = {
         id,
         task,
@@ -65,12 +69,11 @@ function writeTasks(tasks) {
 
 /**
  * Reads and returns all tasks from the JSON file.
- * @param {boolean} parse
  *
  * @returns {Array<Object>} An array of task objects.
  */
-export function getTasks(parse = true) {
-    const data = fs.readFileSync(storagePath); // Read raw file data
+export function getTasks() {
+    const data = fs.readFileSync(storagePath, 'utf-8');
 
-    return parse ? JSON.parse(data) : data; // Parse or return JSON / text
+    return data;
 }

@@ -24,20 +24,20 @@ server.tool("add-task",
 
 server.tool('update-status',
     { id: z.string(), status: z.number() },
-    async ({ status }) => {
+    async ({ id, status }) => {
         const response = updateStatus(id, status);
 
         return {
             content: [{ type: "text", text: response }]
         }
     }
-);
+)
 
 server.tool('get-tasks', async () => {
-    const response = getTasks(false);
+    const response = getTasks();
 
     return {
-        content: [{ type: "text", text: response }]
+        content: [{ type: "text", text: JSON.stringify(JSON.parse(response)) }]
     }
 })
 
