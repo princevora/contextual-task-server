@@ -22,6 +22,17 @@ server.tool("add-task",
     }
 );
 
+server.tool('delete-task',
+    { id: z.string() },
+    async ({ id }) => {
+        const response = removeTask(id);
+
+        return {
+            content: [{ type: "text", text: response }]
+        }
+    }
+)
+
 server.tool('update-status',
     { id: z.string(), status: z.number() },
     async ({ id, status }) => {

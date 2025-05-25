@@ -18,12 +18,12 @@ const storagePath = path.join(__dirname, "./storage/todo.json");
 export function addTask(task) {
     let tasks = getTasks();
 
-    if(tasks == "") tasks = [];
+    if (tasks == "") tasks = [];
     else tasks = JSON.parse(tasks); // Read existing tasks
-    
+
     const id = uuid(); // Generate a unique ID
     const status = 0; // Default status (e.g., incomplete)
-    
+
     const newTask = {
         id,
         task,
@@ -38,22 +38,32 @@ export function addTask(task) {
 }
 
 export function updateStatus(id, status = 0) {
-    if(![0, 1].includes(status)){
+    if (![0, 1].includes(status)) {
         return "Invalid status provided.";
     }
 
-    const tasks = getTasks();
+    const tasks = JSON.parse(getTasks());
 
     for (const task of tasks) {
-        if(task.id == id){
+        if (task.id == id) {
             task.status = status;
             break;
         }
     }
-    
+
     writeTasks(JSON.stringify(tasks, null, 2));
 
     return "The Status has been updated sucessfully.";
+}
+
+export function removeTask(id) {
+    const tasks = JSON.parse(getTasks());
+
+    const updatedTasks = tasks.filter(t => t.id !== id);
+
+    writeTasks(JSON.stringify(updatedTasks, null, 2));
+
+    return "The task has been deleted";
 }
 
 /**
@@ -62,7 +72,7 @@ export function updateStatus(id, status = 0) {
  * @param {string} tasks - The stringified JSON data to be saved.
  */
 function writeTasks(tasks) {
-    if(!tasks) return;
+    if (!tasks) return;
 
     fs.writeFileSync(storagePath, tasks); // Write data to file
 }
